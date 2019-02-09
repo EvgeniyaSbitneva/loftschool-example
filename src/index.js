@@ -108,17 +108,7 @@ function returnArgumentsArray() {
    console.log(newSum()) выведет 6
  */
 
-function bindFunction(fn) {
-    var additioanalArguments = [];
-
-    for (let i = 1; i < arguments.length; i++) {
-        additioanalArguments.push(arguments[i]);
-    }
-
-    return function F() {
-        fn(...additioanalArguments);
-    }
-}
+let bindFunction = (fn, ...additioanalArguments) => fn(...additioanalArguments); 
 
 export {
     returnFirstArgument,
