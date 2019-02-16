@@ -56,7 +56,9 @@ function upperProps(obj) {
     let arr = [];
 
     for (let key in obj) {
-        arr.push(key.toUpperCase());
+        if (key !== undefined) {
+            arr.push(key.toUpperCase());
+        }
     }
 
     return arr;
@@ -98,7 +100,7 @@ function createProxy(obj) {
     let proxy = new Proxy(obj, {
         set(target, prop, value) {
             target[prop] = value * value;
-            
+
             return true;
         }
     });
