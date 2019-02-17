@@ -17,6 +17,22 @@
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
 function isAllTrue(array, fn) {
+    if (!Array.isArray(array) || array.length === 0) {
+        throw new Error('empty array');
+    }
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    for (let i = 0; i < array.length; i++) {
+        var flag = fn(array[i]);
+
+        if (!flag) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /*
@@ -36,6 +52,22 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
+    if (!Array.isArray(array) || array.length === 0) {
+        throw new Error('empty array');
+    }
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    for (let i = 0; i < array.length; i++) {
+        var flag = fn(array[i]);
+
+        if (flag) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /*
@@ -49,7 +81,22 @@ function isSomeTrue(array, fn) {
  3.3: Необходимо выбрасывать исключение в случаях:
    - fn не является функцией (с текстом "fn is not a function")
  */
-function returnBadArguments(fn) {
+function returnBadArguments(fn, ...rest) {
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    let badArguments = [];
+
+    rest.forEach(function(elem) {
+        try {
+            fn(elem);
+        } catch (e) {
+            badArguments.push(elem);
+        }
+    });
+
+    return badArguments;
 }
 
 /*
@@ -69,7 +116,28 @@ function returnBadArguments(fn) {
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator() {
+function calculator(number = 0) {
+    if (!isFinite(number)) {
+        throw new Error('number is not a number');
+    }
+
+    let mathObj = {
+        sum: (...rest) => rest.reduce((prev, current) => (prev + current), number),
+
+        dif: (...rest) => rest.reduce((prev, current) => (prev - current), number),
+
+        div: (...rest) => {
+            if (rest.indexOf(0) !== -1) {
+                throw new Error('division by 0');
+            }
+
+            return rest.reduce((prev, current) => (prev / current), number);
+        },
+
+        mul: (...rest) => rest.reduce((prev, current) => (prev * current), number)
+    }
+
+    return mathObj;
 }
 
 /* При решении задач, пострайтесь использовать отладчик */
