@@ -35,7 +35,7 @@ function map(array, fn) {
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
 function reduce(array, fn, initial = array[0]) {
-    let currentIndex = initial === array[0] ? 1 : 0;
+    let currentIndex = (initial === array[0]) ? 1 : 0;
 
     for (let i = currentIndex; i < array.length; i++) {
         initial = (fn(initial, array[i], i, array));
@@ -53,15 +53,17 @@ function reduce(array, fn, initial = array[0]) {
    upperProps({ name: 'Сергей', lastName: 'Петров' }) вернет ['NAME', 'LASTNAME']
  */
 function upperProps(obj) {
-    let arr = [];
+    return Object.keys(obj).map(elem => elem.toUpperCase());
+    
+    // let arr = [];
 
-    for (let key in obj) {
-        if (key !== undefined) {
-            arr.push(key.toUpperCase());
-        }
-    }
+    // for (let key in obj) {
+    //     if (obj.hasOwnProperty(key)) {
+    //         arr.push(key.toUpperCase());
+    //     }
+    // }
 
-    return arr;
+    // return arr;
 }
 
 /*
@@ -74,14 +76,14 @@ function slice(array, from = 0, to = array.length) {
     let newArr = [];
 
     if (Math.abs(from) > array.length) {
-        from = from < 0 ? 0 : array.length;
+        from = (from < 0) ? 0 : array.length;
     }
     if (Math.abs(to) > array.length) {
-        to = to < 0 ? 0 : array.length;
+        to = (to < 0) ? 0 : array.length;
     }
 
-    let start = from >= 0 ? from : array.length + from;
-    let finish = to >= 0 ? to : array.length + to;
+    let start = (from >= 0) ? from : array.length + from;
+    let finish = (to >= 0) ? to : array.length + to;
 
     for (let i = start; i < finish; i++) {
         newArr.push(array[i]);
