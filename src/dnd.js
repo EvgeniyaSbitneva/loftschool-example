@@ -50,11 +50,35 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
-    // target.addEventListener('mouseDown', () => {
-    //     let top = e.top;
-    //     let left = e.left;
-    // })
-    target.setAttribute('draggable', 'true');
+    target.addEventListener('mousedown', (evt) => {
+        let startCoords = {
+            x: evt.clientX,
+            y: evt.clientY
+        };
+
+        let onMouseMove = (moveEvt) => {
+            let shift = {
+                x: startCoords.x - moveEvt.clientX,
+                y: startCoords.y - moveEvt.clientY
+            };
+
+            startCoords = {
+                x: moveEvt.clientX,
+                y: moveEvt.clientY
+            };
+      
+            target.style.top = (target.offsetTop - shift.y) + 'px';
+            target.style.left = (target.offsetLeft - shift.x) + 'px';
+        };
+  
+        let onMouseUp = () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
