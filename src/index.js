@@ -123,12 +123,13 @@ function deleteTextNodes(where) {
 function deleteTextNodesRecursive(where) {
     for (let child of where.childNodes) {
         if (child.nodeType === 3) {
+            if (child.nextSibling) {
+                deleteTextNodesRecursive(child.nextSibling);
+            }
             where.removeChild(child);
+        } else {
+            deleteTextNodesRecursive(child);
         }
-    }
-
-    for (let child of where.childNodes) {
-        deleteTextNodesRecursive(child);
     }
 }
 /*
