@@ -37,6 +37,28 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
+    return new Promise(resolve => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+        xhr.responseType = 'json';
+        xhr.send();
+        xhr.addEventListener('load', () => {
+            let list = xhr.response;
+
+            list.sort((a, b) => {
+                if (a.name < b.name) {
+                    return -1;
+                } else if (a.name > b.name) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
+            resolve(list);
+        })
+    })
 }
 
 /*
@@ -51,6 +73,11 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
+    if (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1) {
+        return true;
+    }
+
+    return false;
 }
 
 /* Блок с надписью "Загрузка" */
@@ -62,8 +89,32 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
+let towns = [];
+
+(async () => {
+    towns = await loadTowns();
+    loadingBlock.setAttribute('style', 'display:none;');
+    filterBlock.removeAttribute('style');
+})()
+
 filterInput.addEventListener('keyup', function() {
-    // это обработчик нажатия кливиш в текстовом поле
+    filterResult.innerHTML = '';
+
+    const chunk = filterInput.value;
+    const fragment = document.createDocumentFragment();
+
+    if (chunk.length > 0) {
+        for (let town of towns) {
+            if (isMatching(town.name, chunk)) {
+                const item = document.createElement('div');
+                item.innerText = town.name;
+
+                fragment.appendChild(item);
+            }
+        }
+
+        filterResult.appendChild(fragment);
+    }
 });
 
 export {
