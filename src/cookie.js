@@ -46,17 +46,14 @@ const listTable = homeworkContainer.querySelector('#list-table tbody');
 let filterValue = '';
 
 function isMatching(full, chunk) {
-    if (!chunk) {
-        return true;
-    }
-    if (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1) {
-        return true;
-    }
-
-    return false;
+    return !chunk || (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1);
 }
 
 function getCookie() {
+    if (!document.cookie) {
+        return {};
+    }
+
     const cookies = document.cookie.split('; ').reduce((prev, current) => {
         const [name, value] = current.split('=');
 
@@ -127,6 +124,8 @@ addButton.addEventListener('click', () => {
     document.cookie = `${name}=${value}`;
     fillTable(getCookie(), filterValue);
 
-    addNameInput.value ='';
-    addValueInput.value ='';
+    setTimeout(() => {
+        addNameInput.value ='';
+        addValueInput.value ='';
+    }, 100);
 });
