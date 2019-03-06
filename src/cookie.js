@@ -43,6 +43,16 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
+let chunk = '';
+
+function isMatching(full, chunk) {
+    if (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1) {
+        return true;
+    }
+
+    return false;
+}
+
 function getCookie() {
     const cookies = document.cookie.split('; ').reduce((prev, current) => {
         const [name, value] = current.split('=');
@@ -66,7 +76,7 @@ function getRow(name, value) {
     return row;
 }
 
-function fillTable(obj) {
+function fillTable(obj, chunk) {
     let fragment = document.createDocumentFragment();
 
     for (let key in obj) {
@@ -97,7 +107,7 @@ listTable.addEventListener('click', e => {
 })
 
 filterNameInput.addEventListener('keyup', function() {
-    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    chunk = filterNameInput.value;
 });
 
 addButton.addEventListener('click', () => {
@@ -110,8 +120,9 @@ addButton.addEventListener('click', () => {
         document.querySelector(`td[data-content="${name}"]`).parentElement.remove();
     }
     document.cookie = `${name}=${value}`;
-    listTable.appendChild(getRow(name, value));
 
     addNameInput.value ='';
     addValueInput.value ='';
+
+    fillTable(getCookie());
 });
