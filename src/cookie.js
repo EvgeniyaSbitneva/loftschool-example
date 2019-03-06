@@ -43,9 +43,12 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-let chunk = '';
+let filterValue = '';
 
 function isMatching(full, chunk) {
+    if (!chunk) {
+        return true;
+    }
     if (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1) {
         return true;
     }
@@ -79,8 +82,10 @@ function getRow(name, value) {
 function fillTable(obj, chunk) {
     let fragment = document.createDocumentFragment();
 
+    listTable.innerHTML = '';
+
     for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
+        if (obj.hasOwnProperty(key) && isMatching(key, chunk)) {
             fragment.appendChild(getRow(key, obj[key]));
         }
     }
@@ -94,7 +99,7 @@ function removeCookie(name) {
     document.cookie = `${name}=; expires=${date.toUTCString()}`;
 }
 
-fillTable(getCookie());
+fillTable(getCookie(), filterValue);
 
 listTable.addEventListener('click', e => {
     if (e.target.nodeName === 'BUTTON') {
@@ -107,7 +112,8 @@ listTable.addEventListener('click', e => {
 })
 
 filterNameInput.addEventListener('keyup', function() {
-    chunk = filterNameInput.value;
+    filterValue = filterNameInput.value;
+    fillTable(getCookie(), filterValue);
 });
 
 addButton.addEventListener('click', () => {
@@ -117,12 +123,10 @@ addButton.addEventListener('click', () => {
 
     if (cookies.hasOwnProperty(name)) {
         removeCookie(name);
-        document.querySelector(`td[data-content="${name}"]`).parentElement.remove();
     }
     document.cookie = `${name}=${value}`;
+    fillTable(getCookie(), filterValue);
 
     addNameInput.value ='';
     addValueInput.value ='';
-
-    fillTable(getCookie());
 });
