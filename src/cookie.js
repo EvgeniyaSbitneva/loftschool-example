@@ -82,8 +82,10 @@ function fillTable(obj, chunk) {
     listTable.innerHTML = '';
 
     for (let key in obj) {
-        if (obj.hasOwnProperty(key) && isMatching(key, chunk)) {
-            fragment.appendChild(getRow(key, obj[key]));
+        if (obj.hasOwnProperty(key)) {
+            if (isMatching(key, chunk) || isMatching(obj[key], chunk)) {
+                fragment.appendChild(getRow(key, obj[key]));
+            } 
         }
     }
 
